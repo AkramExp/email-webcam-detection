@@ -21,7 +21,7 @@ while True:
         if cv2.contourArea(contour) < 10000:
             continue
         x, y, w, h = cv2.boundingRect(contour)
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0,255,0),3)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 3)
 
     cv2.imshow("My Video", frame)
 
