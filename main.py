@@ -5,7 +5,7 @@ import time
 from sendemails import sendEmail
 import glob
 
-video = cv2.VideoCapture(2)
+video = cv2.VideoCapture(1)
 time.sleep(1)
 first_frame = None
 
@@ -28,7 +28,7 @@ while True:
 
     delta_frame = cv2.absdiff(first_frame, gray_frame_gau)
 
-    thresh_frame = cv2.threshold(delta_frame, 40, 255, cv2.THRESH_BINARY)[1]
+    thresh_frame = cv2.threshold(delta_frame, 41, 255, cv2.THRESH_BINARY)[1]
     dil_frame = cv2.dilate(thresh_frame, None, iterations=2)
 
     contours, check = cv2.findContours(dil_frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -39,20 +39,20 @@ while True:
         rectangle = cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 3)
         if rectangle.any():
             status = 1
-            cv2.imshow(f"images/{count}.png", frame)
+            cv2.imwrite(f"images/{count}.png", frame)
             count += 1
             all_images = glob.glob("images/*.png")
             index = int(len(all_images) / 2)
             image_with_object = all_images[index]
-
+            print(image_with_object)
     status_list.append(status)
     status_list = status_list[-2:]
 
+    print(status_list)
     if status_list[0] == 1 and status_list[1] == 0:
+        print("email sent")
         email_thread = Thread(target=sendEmail, args=(image_with_object, ))
         email_thread.daemon = True
-        clean_thread = Thread(target=clean_folder)
-        clean_thread.daemon = True
 
         email_thread.start()
 
@@ -65,4 +65,5 @@ while True:
 
 video.release()
 
-clean_thread.start()
+clean_folder()
+print("folder clean")
