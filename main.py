@@ -5,7 +5,7 @@ import time
 from sendemails import sendEmail
 import glob
 
-video = cv2.VideoCapture(1)
+video = cv2.VideoCapture(0)
 time.sleep(1)
 first_frame = None
 
